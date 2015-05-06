@@ -1,0 +1,218 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fbutton="http://schemas.android.com/tools"
+
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fbutton_color_clouds"
+    android:orientation="vertical">
+
+
+
+
+         <RelativeLayout
+             android:layout_width="match_parent"
+             android:layout_height="0dip"
+             android:layout_weight="1.7"
+             android:background="@color/fbutton_color_midnight_blue">
+
+             <TextView
+                 android:id="@+id/log"
+                 android:layout_width="wrap_content"
+                 android:layout_height="80dp"
+                 android:layout_marginTop="100dp"
+                 android:layout_marginStart="120dp"
+                 android:text="@string/main_welcome"
+                 android:textColor="@color/fbutton_color_clouds"
+                 android:textSize="70sp"
+
+
+                 />
+             <TextView
+
+                 android:layout_width="wrap_content"
+                 android:layout_height="60dp"
+                 android:layout_below="@+id/log"
+                 android:layout_marginTop="20dp"
+                 android:layout_marginStart="300dp"
+                 android:text="@string/main_log"
+                 android:textColor="@color/fbutton_color_clouds"
+                 android:textSize="30sp"
+
+                 />
+
+        </RelativeLayout>
+        
+        <RelativeLayout
+            android:id="@+id/linerlayout_main"
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="2"
+            android:visibility="visible"
+            >
+
+
+            <info.hoang8f.widget.FButton
+                android:id="@+id/main_connect"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="120dp"
+                android:textColor="#ffffffff"
+                android:textSize="24sp"
+                android:text="@string/main_connect"
+                fbutton:buttonColor="@color/fbutton_color_peter_river"
+                fbutton:shadowColor="@color/fbutton_color_asbestos"
+                fbutton:shadowEnabled="true"
+                fbutton:shadowHeight="15dp"
+                fbutton:cornerRadius="5dp"/>
+
+            <info.hoang8f.widget.FButton
+                android:id="@+id/MainActivity_Button_ConnectAtNow"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_toEndOf="@+id/main_connect"
+                android:textColor="#ffffffff"
+                android:textSize="24sp"
+                android:text="@string/main_history"
+                fbutton:buttonColor="@color/fbutton_color_peter_river"
+                fbutton:shadowColor="@color/fbutton_color_asbestos"
+                fbutton:shadowEnabled="true"
+                fbutton:shadowHeight="5dp"
+                fbutton:cornerRadius="5dp"/>
+
+            <info.hoang8f.widget.FButton
+                android:id="@+id/main_my"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="200dp"
+                android:layout_below="@+id/main_connect"
+                android:textColor="#ffffffff"
+                android:textSize="24sp"
+                android:text="@string/main_my"
+                fbutton:buttonColor="@color/fbutton_color_peter_river"
+                fbutton:shadowColor="@color/fbutton_color_asbestos"
+                fbutton:shadowEnabled="true"
+                fbutton:shadowHeight="5dp"
+                fbutton:cornerRadius="5dp"/>
+
+            <info.hoang8f.widget.FButton
+                android:id="@+id/main_rela"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_toEndOf="@+id/main_my"
+                android:layout_below="@+id/main_connect"
+                android:textColor="#ffffffff"
+                android:textSize="24sp"
+                android:text="@string/main_rela"
+                fbutton:buttonColor="@color/fbutton_color_peter_river"
+                fbutton:shadowColor="@color/fbutton_color_asbestos"
+                fbutton:shadowEnabled="true"
+                fbutton:shadowHeight="5dp"
+                fbutton:cornerRadius="5dp"/>
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linerlayout_main_text"
+             android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"
+            android:gravity="center_horizontal"
+            android:layout_margin="20dp"
+            android:background="@color/fbutton_color_clouds"
+            android:orientation="vertical"
+             android:visibility="gone">
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+
+                android:text="@string/main_bt_connect"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+
+                />
+
+    </LinearLayout>
+
+
+ 		 <LinearLayout 
+ 		     android:id="@+id/linerlayout_main_connect" 
+ 		     android:layout_width="match_parent"
+ 		     android:layout_height="0dp"
+             android:layout_weight="1.5"
+ 		     android:gravity="center_horizontal"
+ 		     android:layout_marginStart="20dp"
+             android:layout_marginEnd="20dp"
+ 		     android:background="@color/fbutton_color_clouds"
+ 		     android:orientation="vertical"
+             android:visibility="gone">
+
+ 		     <ListView
+ 		         android:id="@+id/service_list"
+ 		         android:layout_width="match_parent"
+ 		         android:layout_height="wrap_content"
+
+                 android:cacheColorHint="#00000000"
+
+                 />
+
+
+
+        </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/linerlayout_main_connect_button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:background="@color/fbutton_color_clouds"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <info.hoang8f.widget.FButton
+            android:id="@+id/main_cancel"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:textColor="#ffffffff"
+            android:textSize="24sp"
+            android:text="@string/main_bt_cancel"
+            fbutton:buttonColor="@color/fbutton_color_peter_river"
+            fbutton:shadowColor="@color/fbutton_color_asbestos"
+            fbutton:shadowEnabled="true"
+            fbutton:shadowHeight="5dp"
+            fbutton:cornerRadius="5dp"/>
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1.0"
+            android:gravity="center_horizontal|center_vertical"
+            android:background="@color/darkturquoise"
+            >
+            <TextView
+                android:id="@+id/MainActivity_TextView_ShowConnectState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/main_bt_unconnect"
+                android:textSize="25sp"/>
+
+        </LinearLayout>
+</LinearLayout>

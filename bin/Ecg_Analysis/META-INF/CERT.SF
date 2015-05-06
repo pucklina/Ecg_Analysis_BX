@@ -1,0 +1,61 @@
+Signature-Version: 1.0
+Created-By: 1.0 (Android)
+SHA1-Digest-Manifest: qRwTkLznK8w5Co8Ean+mRynsaac=
+
+Name: res/drawable-xhdpi/ic_launcher.png
+SHA1-Digest: HJWVdRCXqdgpLGGDT6Uzb5hkqQE=
+
+Name: org/achartengine/image/zoom-1.png
+SHA1-Digest: IAzT9MYuTm6r/Z6HSq1HDIK54ko=
+
+Name: res/drawable-hdpi/ic_launcher.png
+SHA1-Digest: 0oRDYl4wUOm0bMq8eVLJG09zkTg=
+
+Name: lib/armeabi/libwfdb.so
+SHA1-Digest: W6CSNubY+1k7F8RSLNzwK5DTiNY=
+
+Name: res/layout/acitvity_show.xml
+SHA1-Digest: nKWwVwPld/zMOZWkEDUfadJi5Cg=
+
+Name: res/layout/acitvity_results.xml
+SHA1-Digest: bmM/A0youjV7AOOY30KdzxJF1aw=
+
+Name: org/achartengine/image/zoom_out.png
+SHA1-Digest: fCue4PKIGrdPWlOh/eNvmGpUExA=
+
+Name: res/drawable-hdpi/ic_main_backgrand.jpg
+SHA1-Digest: FjV6EZE7SoGtRaK4f0OXBFUDN8Y=
+
+Name: lib/armeabi/libbdac.so
+SHA1-Digest: 502PxLqHgdjAacSOAX+53L36Uag=
+
+Name: resources.arsc
+SHA1-Digest: 8URym4jaBq/OXjxIYaUKzetW6cY=
+
+Name: classes.dex
+SHA1-Digest: 2uo3NRmw4JfS05HiBbupXoKHwrY=
+
+Name: org/achartengine/image/zoom_in.png
+SHA1-Digest: lxpKV8NWap/pIL+3lszROFu6bqA=
+
+Name: res/menu/main.xml
+SHA1-Digest: 5jRxrs4uTJfkY7oEYFheKjKsRR4=
+
+Name: AndroidManifest.xml
+SHA1-Digest: lsFAAfCmHspH64fVFbiD2iaECYU=
+
+Name: res/drawable-mdpi/ic_launcher.png
+SHA1-Digest: 73TZoa+3ApYPkY+wbmr1XiAso58=
+
+Name: res/layout/acitvity_set.xml
+SHA1-Digest: Vn7VFXlF7/qxW80AqsleHbvK7HE=
+
+Name: res/drawable-hdpi/ic_show_backgrand.png
+SHA1-Digest: sNZnRdNdxdLh5j2wB5i4bJI66lM=
+
+Name: res/layout/listitem_device.xml
+SHA1-Digest: uPNdoljxnbefAr92eEgwgJ95U6I=
+
+Name: res/layout/activity_main.xml
+SHA1-Digest: iplX6NkrF3YAgxSTqz9VlgYmRI0=
+

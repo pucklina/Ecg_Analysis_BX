@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fbutton_color_clouds"
+    android:orientation="vertical">
+
+
+
+
+ <RelativeLayout
+     android:layout_width="match_parent"
+     android:layout_height="0dp"
+     android:layout_weight="1"
+     android:orientation="vertical"
+     android:paddingBottom="20dp">
+     >
+
+
+
+
+     <TextView
+         android:id="@+id/log"
+         android:layout_width="wrap_content"
+         android:layout_height="60dp"
+         android:layout_above="@+id/nothing3"
+         android:text="@string/login_log"
+         android:textColor="@color/blossom_dark"
+         android:textSize="30sp"
+         android:textStyle="bold"
+         android:layout_centerHorizontal="true"
+         />
+
+     <TextView
+         android:id="@+id/nothing3"
+         android:layout_width="wrap_content"
+         android:layout_height="50dp"
+         android:layout_above="@+id/layout1"
+
+         />
+
+     <RelativeLayout
+         android:id="@+id/layout1"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="vertical"
+         android:layout_alignParentBottom="true"
+
+         >
+
+
+
+         <com.cengalabs.flatui.views.FlatEditText
+             android:id="@+id/login_username"
+             android:layout_width="500dp"
+             android:layout_height="40dp"
+             android:layout_centerHorizontal="true"
+
+             android:hint="@string/login_username"
+
+             android:inputType="text"
+
+             flatui:fl_fieldStyle="fl_box"
+             flatui:fl_textColor="fl_light"
+             flatui:fl_backgroundColor="fl_light"
+             flatui:fl_customBackgroundColor="#00aff0" />
+
+         <TextView
+             android:id="@+id/nothing1"
+             android:layout_width="100dp"
+             android:layout_height="10dp"
+             android:layout_below="@id/login_username"
+             />
+
+
+         <com.cengalabs.flatui.views.FlatEditText
+             android:id="@+id/login_password"
+             android:layout_width="500dp"
+             android:layout_height="40dp"
+             android:layout_centerHorizontal="true"
+             android:layout_below="@id/nothing1"
+
+             android:hint="@string/login_password"
+
+             android:inputType="textPassword"
+
+             flatui:fl_textColor="fl_light"
+             flatui:fl_backgroundColor="fl_light"
+             flatui:fl_customBackgroundColor="#00aff0"
+             flatui:fl_fieldStyle="fl_box" />
+
+         <TextView
+             android:id="@+id/nothing2"
+             android:layout_width="100dp"
+             android:layout_height="40dp"
+             android:layout_below="@id/login_password"
+             />
+
+         <info.hoang8f.widget.FButton
+             android:id="@+id/btn_login"
+             android:layout_centerHorizontal="true"
+             android:layout_width="500dp"
+             android:layout_height="40dp"
+             android:textColor="#ffffffff"
+             android:textSize="14sp"
+             android:layout_below="@id/nothing2"
+
+             android:text="@string/login_confirm"
+
+
+             fbutton:buttonColor="@color/fbutton_color_peter_river"
+             fbutton:shadowColor="@color/fbutton_color_asbestos"
+             fbutton:shadowEnabled="true"
+             fbutton:shadowHeight="5dp"
+             fbutton:cornerRadius="5dp"
+
+
+             />
+
+     </RelativeLayout>
+
+ </RelativeLayout>
+
+ <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.8"
+        android:paddingTop="20dp">
+<ImageView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/login_log"/>
+
+ </RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
+</LinearLayout>

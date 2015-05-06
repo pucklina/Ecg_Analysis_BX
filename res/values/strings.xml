@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Ecg_Analysis</string>
+    <string name="action_settings">Settings</string>
+    <string name="bt_connect">连接设备</string>
+    <string name="bt_readloc">选择文件</string>
+    <string name="bt_confirm">确认</string>
+
+    <string name="bt_exit">退出</string>
+    <string name="bt_set">设置</string>
+    <string name="tv_statement">at Institute of Electronics\ndesigned by Allegro</string>
+    <string name="tv_setloc">请输入文件路径：</string>
+    <string name="app_set">设置</string>
+
+    <!--login-->
+    <string name="login_username">请输入用户名</string>
+    <string name="login_password">请输入密码</string>
+    <string name="login_log">中科院电子所健康监护中心</string>
+    <string name="login_confirm">登录</string>
+    <string name="login_register">注册</string>
+
+    <!--main-->
+    <string name="main_connect">扫描设备</string>
+    <string name="main_my">个人资料</string>
+    <string name="main_history">直接测量</string>
+    <string name="main_welcome">欢迎回来</string>
+    <string name="main_rela">相关设置</string>
+    <string name="main_log">                    --- 专注您的心</string>
+    <string name="main_bt_cancel">取消连接</string>
+    <string name="main_bt_connect">请选择您要连接的设备</string>
+    <string name="main_bt_unconnect">未连接设备</string>
+    <string name="MainActivity_String_DeviceAddressWhichOnConnect">已连接设备：</string>
+
+
+    <!--show-->
+    <string name="show_connect">开始测量</string>
+    <string name="show_error">重新连接</string>
+    <string name="show_complete">暂停测量</string>
+    <string name="show_showTimeChart">时域分析图</string>
+    <string name="show_showFreqChart">频域分析图</string>
+    <string name="show_showHRChart">心率分布图</string>
+
+</resources>
