@@ -15,7 +15,9 @@
     </wildcardResourcePatterns>
     <annotationProcessing>
       <profile default="true" name="Default" enabled="false">
-        <processorPath useClasspath="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/../Andriod EcgAl/09 Ecg_Analysis/libs/androidannotations-3.2.jar" />
+        </processorPath>
       </profile>
     </annotationProcessing>
   </component>

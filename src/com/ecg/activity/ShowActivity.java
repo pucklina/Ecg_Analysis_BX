@@ -110,15 +110,15 @@ public class ShowActivity extends Activity {
      2 Function(ShowActivity_Button_ConnectStart) click to connect bluetooth device.
      */
 
-    private Boolean TimeChartVisiable = false;
-    private Boolean FreqChartVisiable = false;
-    private Boolean HRChartVisiable = true;
+    private Boolean flagForTimeChartVisiable = false;
+    private Boolean flagForFreqChartVisiable = false;
+    private Boolean flagForHRChartVisiable = true;
 
     @Click
     void ShowActivity_Button_ShowHRChart() {
-        HRChartVisiable = true;
-        FreqChartVisiable = false;
-        TimeChartVisiable = false;
+        flagForHRChartVisiable = true;
+        flagForFreqChartVisiable = false;
+        flagForTimeChartVisiable = false;
         ShowActivity_RelativeLayout_TimeChart.setVisibility(View.GONE);
         ShowActivity_LinerLayout_HRChart.setVisibility(View.VISIBLE);
         ShowActivity_RelativeLayout_FreqChart.setVisibility(View.GONE);
@@ -130,9 +130,9 @@ public class ShowActivity extends Activity {
 
     @Click
     void ShowActivity_Button_ShowTimeChart() {
-        TimeChartVisiable = true;
-        FreqChartVisiable = false;
-        HRChartVisiable = false;
+        flagForTimeChartVisiable = true;
+        flagForFreqChartVisiable = false;
+        flagForHRChartVisiable = false;
         ShowActivity_RelativeLayout_TimeChart.setVisibility(View.VISIBLE);
         ShowActivity_LinerLayout_HRChart.setVisibility(View.GONE);
         ShowActivity_RelativeLayout_FreqChart.setVisibility(View.GONE);
@@ -143,9 +143,9 @@ public class ShowActivity extends Activity {
 
     @Click
     void ShowActivity_Button_ShowFreqChart() {
-        TimeChartVisiable = false;
-        FreqChartVisiable = true;
-        HRChartVisiable = false;
+        flagForTimeChartVisiable = false;
+        flagForFreqChartVisiable = true;
+        flagForHRChartVisiable = false;
         ShowActivity_RelativeLayout_TimeChart.setVisibility(View.GONE);
         ShowActivity_LinerLayout_HRChart.setVisibility(View.GONE);
         ShowActivity_RelativeLayout_FreqChart.setVisibility(View.VISIBLE);
@@ -156,7 +156,8 @@ public class ShowActivity extends Activity {
         updateAnalysisTV(null, 2);
     }
 
-    private boolean registerStatue = false;//registerStatue:This Flag show that RegisterReceiver is successful or not
+    private boolean flagForIfReceiverRegistered = false;//flagForIfReceiverRegistered:This Flag show that RegisterReceiver is successful or not
+    private boolean flagForIfConnectSuccecceed = false;
 
     @Click
     void ShowActivity_Button_ConnectStart() {
@@ -167,27 +168,27 @@ public class ShowActivity extends Activity {
         if (ButtonProcess < 100 && ButtonProcess > 0) ;//When Button is Indeterminate,do nothing
         else {
 
-            //RegisterReceiver for three times
-            //if suceess:continue
-            //if fail:end click
+            //if Reciever not Register,Register it;
+            if(!flagForIfReceiverRegistered)
+                if(registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter())!=null)  flagForIfReceiverRegistered = true;
+
+
+            //Begin Connect
             for (int i = 0; i < 3; i++) {
-                registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-                //Log.i(tag, "mBluetoothLeService" + mBluetoothLeService.toString());
                 if (mBluetoothLeService != null) {
                     Log.i("information onServiceConnected", ""
                             + mBluetoothLeService.getClass().toString());
                     final boolean result = mBluetoothLeService.connect(mDeviceAddress);
                     Log.i("information", "Connect request result=" + result);
                     if (result) {
-                        registerStatue = true;
+                        flagForIfConnectSuccecceed = true;
                         break;
                     } else if (i == 2) ShowActivity_Button_ConnectStart.setProgress(-1);
                 }
             }
-            Log.i(tag, "registerStatue:" + registerStatue);
 
             //RegisterReceiver must success
-            if (registerStatue) {
+            if (flagForIfConnectSuccecceed) {
 
                 //if you click "connect again"
                 if (ShowActivity_Button_ConnectStart.getProgress() == -1)
@@ -197,11 +198,12 @@ public class ShowActivity extends Activity {
                 if (ShowActivity_Button_ConnectStart.getProgress() == 0) {
                     ShowActivity_Button_ConnectStart.setIndeterminateProgressMode(true); // turn on indeterminate progress
                     ShowActivity_Button_ConnectStart.setProgress(50);
-                    ConnectDevice();
+                    WriteDevice();
                 }
                 //if you click "pause connect"
                 else if (ShowActivity_Button_ConnectStart.getProgress() == 100) {
                     unregisterReceiver(mGattUpdateReceiver);
+                    flagForIfReceiverRegistered = false;
                     ShowActivity_Button_ConnectStart.setProgress(0);
                 }
             }
@@ -213,17 +215,11 @@ public class ShowActivity extends Activity {
     /*--------------------- Part 3 BluetoothService Start----------------------------
     ---------------------------------------------------------------------------*/
 
-    public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
-    public static final String EXTRAS_ENTER_METHOD = "ENTER_METHOD";
-
-    public final static UUID UUID_ACC_SERV = fromString("f000aa10-0451-4000-b000-000000000000"),
-            UUID_ACC_DATA = fromString("f000aa11-0451-4000-b000-000000000000"),
-            UUID_ACC_CONF = fromString("f000aa12-0451-4000-b000-000000000000"),
-            CCC = fromString("00002902-0000-1000-8000-00805f9b34fb");
 
     private BluetoothLeService mBluetoothLeService;
     private String mDeviceAddress;
-    private String mEnterMethod;
+
+    //CallBackFunction for BindService
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName componentName,
                                        IBinder service) {
@@ -253,26 +249,37 @@ public class ShowActivity extends Activity {
          Function(ConnectDevice1) and Function(ConnectDevice2) are try to connect to
          device and write config flag to it.
       ---------------------------------------------------------------------------*/
-    private boolean ConnectStatue1 = false; //Flag shows connect1 connect successfully or not
-    private boolean ConnectStatue2 = false;  //Flag shows connect2 connect successfully or not
-    private boolean ConnectFinishStatue1 = true;  //Flag shows connect1 thread running or not
-    private boolean ConnectFinishStatue2 = true;  //Flag shows connect2 thread running or not
+
+    public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
+    public static final String EXTRAS_ENTER_METHOD = "ENTER_METHOD";
+
+    public final static UUID UUID_ACC_SERV = fromString("f000aa10-0451-4000-b000-000000000000"),
+            UUID_ACC_DATA = fromString("f000aa11-0451-4000-b000-000000000000"),
+            UUID_ACC_CONF = fromString("f000aa12-0451-4000-b000-000000000000"),
+            CCC = fromString("00002902-0000-1000-8000-00805f9b34fb");
+
+
+    private boolean flagForIfWriteDevice1Succeed = false; //Flag shows connect1 connect successfully or not
+    private boolean flagForIfWriteDevice2Succeed = false;  //Flag shows connect2 connect successfully or not
+    private boolean flagForIfWriteDevice1Finish = true;  //Flag shows connect1 thread running or not
+    private boolean flagForIfWriteDevice2Finish = true;  //Flag shows connect2 thread running or not
 
     @Background
-    void ConnectDevice() {
-        ConnectStatue1 = false;
-        ConnectStatue2 = false;
+    void WriteDevice() {
+        flagForIfWriteDevice1Succeed = false;
+        flagForIfWriteDevice2Succeed = false;
         int count = 0;
         while (count != 10) { //try to connect for 10 times
-            if (ConnectFinishStatue1 && ConnectFinishStatue2) {
-                if ((ConnectStatue1 && ConnectStatue2 && ConnectFinishStatue1 && ConnectFinishStatue2)) {
+            if (flagForIfWriteDevice1Finish && flagForIfWriteDevice2Finish) {
+                if ((flagForIfWriteDevice1Succeed && flagForIfWriteDevice2Succeed
+                        && flagForIfWriteDevice1Finish && flagForIfWriteDevice2Finish)) {
                     setCircleButton(100);
                     break;
                 }
-                ConnectFinishStatue1 = false;
-                ConnectFinishStatue2 = false;
-                ConnectDevice1();
-                ConnectDevice2();
+                flagForIfWriteDevice1Finish = false;
+                flagForIfWriteDevice2Finish = false;
+                WriteDevice1();
+                WriteDevice2();
                 count++;
             }
 
@@ -282,7 +289,7 @@ public class ShowActivity extends Activity {
                 e.printStackTrace();
             }
         }
-        if (ConnectStatue1 && ConnectStatue2)
+        if (flagForIfWriteDevice1Succeed && flagForIfWriteDevice2Succeed)
             setCircleButton(100); //when connect1 and connect2 connect successful
         else setCircleButton(-1);
 
@@ -296,12 +303,12 @@ public class ShowActivity extends Activity {
     }
 
     @Background(delay = 500)
-    void ConnectDevice1() {
+    void WriteDevice1() {
 
-        Log.i(tag, "STATUE1 before:" + ConnectStatue1);
+        Log.i(tag, "STATUE1 before:" + flagForIfWriteDevice1Succeed);
         //Tag connect1 is running
-        if (!ConnectStatue1) {
-            ConnectFinishStatue1 = false;
+        if (!flagForIfWriteDevice1Succeed) {
+            flagForIfWriteDevice1Finish = false;
             BluetoothGattService GattService = mBluetoothLeService
                     .getSerices(UUID_ACC_SERV);
             if (GattService != null) {
@@ -317,33 +324,33 @@ public class ShowActivity extends Activity {
                     if (success) {
                         Log.w("information changeNotification success",
                                 "information changeNotification");
-                        ConnectStatue1 = true;
+                        flagForIfWriteDevice1Succeed = true;
                     }
                     mBluetoothLeService.writeDescriptor(config);
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println("It ALL");
-                    ConnectStatue1 = false;
+                    flagForIfWriteDevice1Succeed = false;
                 } finally {
-                    ConnectFinishStatue1 = true;
+                    flagForIfWriteDevice1Finish = true;
                 }
             } else {
-                ConnectStatue1 = false;
+                flagForIfWriteDevice1Succeed = false;
             }
         }
-        ConnectFinishStatue1 = true;
+        flagForIfWriteDevice1Finish = true;
 
-        Log.i(tag, "STATUE1:" + ConnectStatue1);
+        Log.i(tag, "STATUE1:" + flagForIfWriteDevice1Succeed);
     }
 
 
     @Background(delay = 1000)
-    void ConnectDevice2() {
+    void WriteDevice2() {
 
-        Log.i(tag, "STATUE2 before:" + ConnectStatue2);
+        Log.i(tag, "STATUE2 before:" + flagForIfWriteDevice2Succeed);
 
-        if (!ConnectStatue2) {
-            ConnectFinishStatue2 = false;
+        if (!flagForIfWriteDevice2Succeed) {
+            flagForIfWriteDevice2Finish = false;
             BluetoothGattService GattService = mBluetoothLeService
                     .getSerices(UUID_ACC_SERV);
             if (GattService != null) {
@@ -354,18 +361,18 @@ public class ShowActivity extends Activity {
                     configCharacteristic.setValue(code);
                     mBluetoothLeService
                             .writeCharacteristic(configCharacteristic);
-                    ConnectStatue2 = true;
+                    flagForIfWriteDevice2Succeed = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println("It ALL");
-                    ConnectStatue2 = false;
+                    flagForIfWriteDevice2Succeed = false;
                 } finally {
-                    ConnectFinishStatue2 = true;
+                    flagForIfWriteDevice2Finish = true;
                 }
-            } else ConnectStatue2 = false;
+            } else flagForIfWriteDevice2Succeed = false;
         }
-        ConnectFinishStatue2 = true;
-        Log.i(tag, "STATUE2:" + ConnectStatue2);
+        flagForIfWriteDevice2Finish = true;
+        Log.i(tag, "STATUE2:" + flagForIfWriteDevice2Succeed);
     }
     /*--------------------- Part 4 BluetoothConnect End----------------------------
     ---------------------------------------------------------------------------*/
@@ -427,24 +434,22 @@ public class ShowActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//Forbid SCREEN off
 
         final Intent intent = getIntent();
 
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
-        mEnterMethod = intent.getStringExtra(EXTRAS_ENTER_METHOD);
 
         MyApplication.BLEDeviceName = mDeviceAddress;
 
+        //store the DeviceAddress
         SharedPreferences.Editor editor = getSharedPreferences("DeviceAddress",MODE_PRIVATE).edit();
         editor.putString("DeviceAddress",mDeviceAddress);
         editor.commit();
 
 
-        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-        startService(gattServiceIntent);
-        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
     }
 
@@ -470,30 +475,36 @@ public class ShowActivity extends Activity {
     }
 
     protected void onResume() {
+        Log.e(tag,"onResume");
         super.onResume();
+        //registerReceiver(from BLEService)
+        if(registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter())!=null)  flagForIfReceiverRegistered = true;
+        //START Service 和 bindService
+        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+        startService(gattServiceIntent);
+        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
-
 
     protected void onStop() {
         super.onStop();
-        if (registerStatue) {
+        Log.e(tag,"onStop");
+        if (flagForIfReceiverRegistered) {
             unregisterReceiver(mGattUpdateReceiver);
-
+            flagForIfReceiverRegistered = false;
         }
         unbindService(mServiceConnection);
     }
 
 
-
     protected void onPause() {
         super.onPause();
+        Log.e(tag,"onPause");
     }
 
     protected void onDestroy() {
         super.onDestroy();
-        if (registerStatue) {
-            unregisterReceiver(mGattUpdateReceiver);
-        }
+        Log.e(tag,"onDestroy");
+
         mBluetoothLeService = null;
     }
     /*--------------------- Part 6 AndriodActivity LifeCycle End----------------------------
@@ -549,7 +560,7 @@ public class ShowActivity extends Activity {
             Anno anno = JniBdacServer.BDAC((int) ecg[i] * 200);
             if (anno.dectTime != 0) {
                 //updateAnalysisTV(anno); When HRChart Invisiable
-                if (HRChartVisiable || TimeChartVisiable) updateAnalysisTV(anno, 1);
+                if (flagForHRChartVisiable || flagForTimeChartVisiable) updateAnalysisTV(anno, 1);
                 //help to update Time Chart
                 timeAnnoAdapter.insertAnno(anno);
                 //updateRateMap
@@ -840,7 +851,7 @@ public class ShowActivity extends Activity {
             HRChartYMin = tempMin - 40;
         }
         //Use UI-Thread to invalidate
-        if (HRChartVisiable) HRChartinvalidate();
+        if (flagForHRChartVisiable) HRChartinvalidate();
         updateHRChartFlag = false;
     }
 
@@ -917,7 +928,7 @@ public class ShowActivity extends Activity {
 
         //If has more than one NewValueCount,invalidate();
         if (timeAnnoAdapter.getNewValueCount() - TimeChartNewValueCount >= 2) {
-            if (TimeChartVisiable) TimeChartinvalidate();
+            if (flagForTimeChartVisiable) TimeChartinvalidate();
             TimeChartNewValueCount = timeAnnoAdapter.getNewValueCount();
         }
         updateTimeChartFlag = false;
@@ -985,7 +996,7 @@ public class ShowActivity extends Activity {
             filter();
             fd = new float[FFT_N];
             fd = JniFFTServer.fft(td, FFT_N);
-            if (FreqChartVisiable) updateAnalysisTV(null, 2);
+            if (flagForFreqChartVisiable) updateAnalysisTV(null, 2);
             filterFD();
             yVals.clear();
             //java.text.DecimalFormat ff = new java.text.DecimalFormat("#0.###");
@@ -1017,7 +1028,7 @@ public class ShowActivity extends Activity {
                 FreqChartyDataSet.setDrawValues(false);// 显示颜色
 
                 FreqChart.setData(FreqChartFinalData);
-                if (FreqChartVisiable) FreqChartinvalidate();
+                if (flagForFreqChartVisiable) FreqChartinvalidate();
             }
 
         }

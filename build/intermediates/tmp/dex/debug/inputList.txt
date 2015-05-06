@@ -1,14 +1,14 @@
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/classes/debug
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/classes-c39b5ade8e04b2878ebee422d1e763d1ce766536.jar
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/classes-1b19f8f6ea4febd900775b91e4b26a56e996b43c.jar
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/classes-2800ec308d7d4eee20a0b6abcf2d05b504d0666d.jar
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/androidannotations-api-3.2-85c46fec216db3b96c22cc0f77d7712edce64728.jar
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/library-1.0.15-65adb97264f617e144bd694d8853bbacdef4b289.jar
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/codemodel-2.4.1-fd2a63385643f4f6e906fc9b9ab9006aaa40a42d.jar
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/achartengine-1.2.0-34e754a023a3d6f6356d7fd22c2f88e19e26c611.jar
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/armeabi-4df4dc96e9b87e02102974d9e431efa55d54f521.jar
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/gson-2.3-af7a1c6e19302128e622ccd080f2d78cbc3b3d06.jar
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/junit-4.8.1-302cb2d80314bc26171441909cb83d4c9432513d.jar
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/MPAndroidChart-v2.0.8-f8da662126251ccdb0a725e2b5031f46f8a79212.jar
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/androidannotations-3.2-1f01e1550ec455c343d94075a1e5b503736e1d92.jar
-/Users/dongfangyuxiao/Desktop/Andriod EcgAl/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/android-support-v4-25b6e5fe7df6f3ec523d269de2473cfce71117fd.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/classes/debug
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/classes-03363b4e31f1f099d726abc16d15c6e8c1f9c31e.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/classes-c278daf6515c66b37680cf55a175eabc05852406.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/classes-1ef34400e146ffdc702a4ae2206247cd2ae764be.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/androidannotations-api-3.2-85c46fec216db3b96c22cc0f77d7712edce64728.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/library-1.0.15-65adb97264f617e144bd694d8853bbacdef4b289.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/codemodel-2.4.1-fd2a63385643f4f6e906fc9b9ab9006aaa40a42d.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/achartengine-1.2.0-f377171badc0b17fe4841e554ebbe1ba0f55e742.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/armeabi-e2b92b6fa2a68b1c92b663a17649565722a63dc8.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/gson-2.3-af7a1c6e19302128e622ccd080f2d78cbc3b3d06.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/junit-4.8.1-302cb2d80314bc26171441909cb83d4c9432513d.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/MPAndroidChart-v2.0.8-f8da662126251ccdb0a725e2b5031f46f8a79212.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/androidannotations-3.2-1f01e1550ec455c343d94075a1e5b503736e1d92.jar
+/Users/dongfangyuxiao/Desktop/09 Ecg_Analysis/build/intermediates/pre-dexed/debug/android-support-v4-40f90f0070daa977bda47a08cc2080b546b79343.jar

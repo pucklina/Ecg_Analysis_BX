@@ -76,14 +76,38 @@ public final class MainActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        linerlayout_main_text = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_text));
-        MainActivity_TextView_ShowConnectState = ((TextView) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_TextView_ShowConnectState));
-        linerlayout_main_connect_button = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_connect_button));
-        service_list = ((ListView) hasViews.findViewById(com.ecg_analysis.R.id.service_list));
-        main_cancel = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.main_cancel));
-        linerlayout_main = ((RelativeLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main));
         main_connect = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.main_connect));
+        linerlayout_main_text = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_text));
+        main_cancel = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.main_cancel));
         linerlayout_main_connect = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_connect));
+        MainActivity_TextView_ShowConnectState = ((TextView) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_TextView_ShowConnectState));
+        linerlayout_main = ((RelativeLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main));
+        service_list = ((ListView) hasViews.findViewById(com.ecg_analysis.R.id.service_list));
+        linerlayout_main_connect_button = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_connect_button));
+        if (main_cancel!= null) {
+            main_cancel.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    MainActivity_.this.main_cancel();
+                }
+
+            }
+            );
+        }
+        if (main_connect!= null) {
+            main_connect.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    MainActivity_.this.main_connect();
+                }
+
+            }
+            );
+        }
         {
             View view = hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_Button_ConnectAtNow);
             if (view!= null) {
@@ -98,30 +122,6 @@ public final class MainActivity_
                 }
                 );
             }
-        }
-        if (main_connect!= null) {
-            main_connect.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    MainActivity_.this.main_connect();
-                }
-
-            }
-            );
-        }
-        if (main_cancel!= null) {
-            main_cancel.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    MainActivity_.this.main_cancel();
-                }
-
-            }
-            );
         }
         if (service_list!= null) {
             service_list.setOnItemClickListener(new OnItemClickListener() {
