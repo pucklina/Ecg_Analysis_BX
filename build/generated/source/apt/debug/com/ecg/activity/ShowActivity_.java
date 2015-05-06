@@ -81,18 +81,30 @@ public final class ShowActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        ShowActivity_Button_ConnectStart = ((CircularProgressButton) hasViews.findViewById(id.ShowActivity_Button_ConnectStart));
-        ShowActivity_TextView_AnalysisText = ((TextView) hasViews.findViewById(id.ShowActivity_TextView_AnalysisText));
-        HRChart = ((LineChart) hasViews.findViewById(id.HRChart));
-        ShowActivity_RelativeLayout_TimeChart = ((RelativeLayout) hasViews.findViewById(id.ShowActivity_RelativeLayout_TimeChart));
-        ShowActivity_Button_ShowTimeChart = ((Button) hasViews.findViewById(id.ShowActivity_Button_ShowTimeChart));
-        FreqChart = ((LineChart) hasViews.findViewById(id.FreqChart));
         ShowActivity_RelativeLayout_FreqChart = ((RelativeLayout) hasViews.findViewById(id.ShowActivity_RelativeLayout_FreqChart));
+        ShowActivity_LinerLayout_ECGChart = ((LinearLayout) hasViews.findViewById(id.ShowActivity_LinerLayout_ECGChart));
+        FreqChart = ((LineChart) hasViews.findViewById(id.FreqChart));
+        ShowActivity_Button_ShowTimeChart = ((Button) hasViews.findViewById(id.ShowActivity_Button_ShowTimeChart));
+        ShowActivity_TextView_AnalysisText = ((TextView) hasViews.findViewById(id.ShowActivity_TextView_AnalysisText));
         ShowActivity_LinerLayout_HRChart = ((LinearLayout) hasViews.findViewById(id.ShowActivity_LinerLayout_HRChart));
         ShowActivity_Button_ShowHRChart = ((Button) hasViews.findViewById(id.ShowActivity_Button_ShowHRChart));
-        TimeChart = ((BarChart) hasViews.findViewById(id.TimeChart));
-        ShowActivity_LinerLayout_ECGChart = ((LinearLayout) hasViews.findViewById(id.ShowActivity_LinerLayout_ECGChart));
+        ShowActivity_RelativeLayout_TimeChart = ((RelativeLayout) hasViews.findViewById(id.ShowActivity_RelativeLayout_TimeChart));
+        HRChart = ((LineChart) hasViews.findViewById(id.HRChart));
+        ShowActivity_Button_ConnectStart = ((CircularProgressButton) hasViews.findViewById(id.ShowActivity_Button_ConnectStart));
         ShowActivity_Button_ShowFreqChart = ((Button) hasViews.findViewById(id.ShowActivity_Button_ShowFreqChart));
+        TimeChart = ((BarChart) hasViews.findViewById(id.TimeChart));
+        if (ShowActivity_Button_ShowTimeChart!= null) {
+            ShowActivity_Button_ShowTimeChart.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    ShowActivity_.this.ShowActivity_Button_ShowTimeChart();
+                }
+
+            }
+            );
+        }
         if (ShowActivity_Button_ShowHRChart!= null) {
             ShowActivity_Button_ShowHRChart.setOnClickListener(new OnClickListener() {
 
@@ -117,18 +129,6 @@ public final class ShowActivity_
             }
             );
         }
-        if (ShowActivity_Button_ShowTimeChart!= null) {
-            ShowActivity_Button_ShowTimeChart.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    ShowActivity_.this.ShowActivity_Button_ShowTimeChart();
-                }
-
-            }
-            );
-        }
         if (ShowActivity_Button_ShowFreqChart!= null) {
             ShowActivity_Button_ShowFreqChart.setOnClickListener(new OnClickListener() {
 
@@ -145,20 +145,6 @@ public final class ShowActivity_
     }
 
     @Override
-    public void ECGChartinvalidate() {
-        handler_.post(new Runnable() {
-
-
-            @Override
-            public void run() {
-                ShowActivity_.super.ECGChartinvalidate();
-            }
-
-        }
-        );
-    }
-
-    @Override
     public void TimeChartinvalidate() {
         handler_.post(new Runnable() {
 
@@ -166,34 +152,6 @@ public final class ShowActivity_
             @Override
             public void run() {
                 ShowActivity_.super.TimeChartinvalidate();
-            }
-
-        }
-        );
-    }
-
-    @Override
-    public void BackToMainActivity() {
-        handler_.post(new Runnable() {
-
-
-            @Override
-            public void run() {
-                ShowActivity_.super.BackToMainActivity();
-            }
-
-        }
-        );
-    }
-
-    @Override
-    public void HRChartinvalidate() {
-        handler_.post(new Runnable() {
-
-
-            @Override
-            public void run() {
-                ShowActivity_.super.HRChartinvalidate();
             }
 
         }
@@ -229,20 +187,6 @@ public final class ShowActivity_
     }
 
     @Override
-    public void setCircleButton(final int process) {
-        handler_.post(new Runnable() {
-
-
-            @Override
-            public void run() {
-                ShowActivity_.super.setCircleButton(process);
-            }
-
-        }
-        );
-    }
-
-    @Override
     public void BluetoothDisconnetWarning() {
         handler_.post(new Runnable() {
 
@@ -257,17 +201,13 @@ public final class ShowActivity_
     }
 
     @Override
-    public void ConnectDevice1() {
-        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 500, "") {
+    public void BackToMainActivity() {
+        handler_.post(new Runnable() {
 
 
             @Override
-            public void execute() {
-                try {
-                    ShowActivity_.super.ConnectDevice1();
-                } catch (Throwable e) {
-                    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
-                }
+            public void run() {
+                ShowActivity_.super.BackToMainActivity();
             }
 
         }
@@ -275,14 +215,56 @@ public final class ShowActivity_
     }
 
     @Override
-    public void updateTimeChart() {
+    public void setCircleButton(final int process) {
+        handler_.post(new Runnable() {
+
+
+            @Override
+            public void run() {
+                ShowActivity_.super.setCircleButton(process);
+            }
+
+        }
+        );
+    }
+
+    @Override
+    public void ECGChartinvalidate() {
+        handler_.post(new Runnable() {
+
+
+            @Override
+            public void run() {
+                ShowActivity_.super.ECGChartinvalidate();
+            }
+
+        }
+        );
+    }
+
+    @Override
+    public void HRChartinvalidate() {
+        handler_.post(new Runnable() {
+
+
+            @Override
+            public void run() {
+                ShowActivity_.super.HRChartinvalidate();
+            }
+
+        }
+        );
+    }
+
+    @Override
+    public void updateFreqChart() {
         BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
 
 
             @Override
             public void execute() {
                 try {
-                    ShowActivity_.super.updateTimeChart();
+                    ShowActivity_.super.updateFreqChart();
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }
@@ -293,14 +275,14 @@ public final class ShowActivity_
     }
 
     @Override
-    public void ConnectDevice2() {
-        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 1000, "") {
+    public void WriteDevice() {
+        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
 
 
             @Override
             public void execute() {
                 try {
-                    ShowActivity_.super.ConnectDevice2();
+                    ShowActivity_.super.WriteDevice();
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }
@@ -329,14 +311,50 @@ public final class ShowActivity_
     }
 
     @Override
-    public void ConnectDevice() {
+    public void WriteDevice1() {
+        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 500, "") {
+
+
+            @Override
+            public void execute() {
+                try {
+                    ShowActivity_.super.WriteDevice1();
+                } catch (Throwable e) {
+                    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
+                }
+            }
+
+        }
+        );
+    }
+
+    @Override
+    public void WriteDevice2() {
+        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 1000, "") {
+
+
+            @Override
+            public void execute() {
+                try {
+                    ShowActivity_.super.WriteDevice2();
+                } catch (Throwable e) {
+                    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
+                }
+            }
+
+        }
+        );
+    }
+
+    @Override
+    public void updateTimeChart() {
         BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
 
 
             @Override
             public void execute() {
                 try {
-                    ShowActivity_.super.ConnectDevice();
+                    ShowActivity_.super.updateTimeChart();
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }
@@ -355,24 +373,6 @@ public final class ShowActivity_
             public void execute() {
                 try {
                     ShowActivity_.super.updateECGChart();
-                } catch (Throwable e) {
-                    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
-                }
-            }
-
-        }
-        );
-    }
-
-    @Override
-    public void updateFreqChart() {
-        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
-
-
-            @Override
-            public void execute() {
-                try {
-                    ShowActivity_.super.updateFreqChart();
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }
