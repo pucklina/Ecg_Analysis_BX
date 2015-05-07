@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import com.cengalabs.flatui.views.FlatToggleButton;
 import com.ecg.MyApplication;
 import com.ecg_analysis.R;
 
@@ -28,25 +29,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.ViewById;
 
 import info.hoang8f.widget.FButton;
-
-import static java.util.UUID.fromString;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends Activity {
@@ -64,9 +63,10 @@ public class MainActivity extends Activity {
     boolean x;
     @Background
     void ConnectDevice(){
-        if(!flagForBLEConnecting&&mBluetoothLeService!=null)
-             x= mBluetoothLeService.connect(MyApplication.BLEDeviceName);
-        System.out.println(x);
+        if(!flagForBLEConnecting&&mBluetoothLeService!=null&&flagForIfConnectAuto) {
+            x = mBluetoothLeService.connect(MyApplication.BLEDeviceName,true);
+            System.out.println(x);
+        }
     }
 
     @Override
@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
                 ConnectDevice();
             }
         };
-        timer.schedule(task,0, 5*1000);
+        timer.schedule(task,0, 2*1000);
 
         SharedPreferences sharedPreferences = getSharedPreferences("DeviceAddress",MODE_PRIVATE);
         if(sharedPreferences!=null){
@@ -240,7 +240,7 @@ public class MainActivity extends Activity {
                 Log.i("information", "Unable to initialize Bluetooth");
                 finish();
             }
-            mBluetoothLeService.connect(MyApplication.BLEDeviceName);
+            mBluetoothLeService.connect(MyApplication.BLEDeviceName,true);
         }
 
         public void onServiceDisconnected(ComponentName componentName) {
@@ -320,8 +320,12 @@ public class MainActivity extends Activity {
     public void onStop() {
         super.onStop();
         Log.e("MainActivity","onStop");
-        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-        if(flagForBindService)  unbindService(mServiceConnection);
+        unregisterReceiver(mGattUpdateReceiver);
+        if(flagForBindService)  {
+
+            unbindService(mServiceConnection);
+            flagForBindService = false;
+        }
 
     }
 
@@ -398,5 +402,28 @@ public class MainActivity extends Activity {
         TextView deviceAddress;
     }
 
+    @ViewById
+    ToggleButton MainActivity_ToggleButton_IfConnectAuto;
+
+
+    boolean flagForIfConnectAuto = true;
+    @CheckedChange
+    void MainActivity_ToggleButton_IfConnectAuto(){
+        if(MainActivity_ToggleButton_IfConnectAuto.isChecked()){
+            Toast.makeText(MainActivity.this, "已经关闭", Toast.LENGTH_SHORT).show();
+           // unregisterReceiver(mGattUpdateReceiver);
+
+            mBluetoothLeService.disconnect();
+            mBluetoothLeService.connect(MyApplication.BLEDeviceName,false);
+            mBluetoothLeService.disconnect();
+            flagForIfConnectAuto = false;
+        }else{
+            Toast.makeText(MainActivity.this, "已经开启", Toast.LENGTH_SHORT).show();
+          //  registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+            mBluetoothLeService.connect(MyApplication.BLEDeviceName,true);
+            flagForIfConnectAuto = true;
+        }
+
+    }
 
 }

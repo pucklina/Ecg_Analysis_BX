@@ -65,7 +65,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 @EActivity(R.layout.acitvity_show)
 public class ShowActivity extends Activity {
@@ -178,7 +177,7 @@ public class ShowActivity extends Activity {
                 if (mBluetoothLeService != null) {
                     Log.i("information onServiceConnected", ""
                             + mBluetoothLeService.getClass().toString());
-                    final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+                    final boolean result = mBluetoothLeService.connect(mDeviceAddress,true);
                     Log.i("information", "Connect request result=" + result);
                     if (result) {
                         flagForIfConnectSuccecceed = true;
@@ -229,7 +228,7 @@ public class ShowActivity extends Activity {
                 Log.i("information", "Unable to initialize Bluetooth");
                 finish();
             }
-            mBluetoothLeService.connect(mDeviceAddress);
+            mBluetoothLeService.connect(mDeviceAddress,true);
         }
 
         public void onServiceDisconnected(ComponentName componentName) {
@@ -604,7 +603,7 @@ public class ShowActivity extends Activity {
 
             if (ECGChartArray.size() >= 1000) {
                 ECGChartArray.remove(0);
-                removecount++;
+                removeCount++;
             }
         }
 
@@ -614,7 +613,7 @@ public class ShowActivity extends Activity {
             //Remove the R-peak point that should not show in this chart now
             //We judge if the first one poiont exceed the border,if it is,remove it and cotinue.
             //else break;
-            if (Rpeakposition.get(0) - removecount < 0) {
+            if (Rpeakposition.get(0) - removeCount < 0) {
                 Rpeakposition.remove(0);
                 TypeArray.remove(0);
                 //TempPeakECGArray.remove(0);
@@ -704,7 +703,7 @@ public class ShowActivity extends Activity {
 
     private int tempCount = 0;
     private int labeljustCount = 0;
-    private int removecount = 0;
+    private int removeCount = 0;
     private Boolean updateECGChartFlag = false;
 
     @Background
@@ -738,8 +737,8 @@ public class ShowActivity extends Activity {
             //Add annotation:Rpeakposition.get(i) is R-peak point is the X of the total ecg value
             //removecount is count that ECGChartTempArray has been move as it's Max capcity is 1000 now.
             for (int i = 0; i < TempRpeakposition.size(); i++) {
-                seriesR.addAnnotation(TempTypeArray.get(i), TempRpeakposition.get(i) - removecount+2, maxNum * 1.1 + 0.2);
-                seriesR.add(TempRpeakposition.get(i)+2 - removecount, maxNum * 1.1);
+                seriesR.addAnnotation(TempTypeArray.get(i), TempRpeakposition.get(i) - removeCount+2, maxNum * 1.1 + 0.2);
+                seriesR.add(TempRpeakposition.get(i)+2 - removeCount, maxNum * 1.1);
             }
 
             mDatasetEcg.addSeries(1, seriesR);

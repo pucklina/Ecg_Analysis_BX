@@ -29,6 +29,8 @@
     <string name="main_log">                    --- 专注您的心</string>
     <string name="main_bt_cancel">取消连接</string>
     <string name="main_bt_connect">请选择您要连接的设备</string>
+
+    <string name="MainActivity_String_IfConnectAuto">是否自动连接默认设备?               </string>
     <string name="main_bt_unconnect">未连接设备</string>
     <string name="MainActivity_String_DeviceAddressWhichOnConnect">已连接设备：</string>
 

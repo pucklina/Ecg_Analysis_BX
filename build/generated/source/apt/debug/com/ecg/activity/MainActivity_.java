@@ -12,10 +12,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 import com.ecg_analysis.R.layout;
 import info.hoang8f.widget.FButton;
 import org.androidannotations.api.BackgroundExecutor;
@@ -76,26 +79,15 @@ public final class MainActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        main_connect = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.main_connect));
-        linerlayout_main_text = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_text));
-        main_cancel = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.main_cancel));
-        linerlayout_main_connect = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_connect));
-        MainActivity_TextView_ShowConnectState = ((TextView) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_TextView_ShowConnectState));
         linerlayout_main = ((RelativeLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main));
         service_list = ((ListView) hasViews.findViewById(com.ecg_analysis.R.id.service_list));
+        linerlayout_main_connect = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_connect));
+        main_connect = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.main_connect));
+        main_cancel = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.main_cancel));
+        linerlayout_main_text = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_text));
         linerlayout_main_connect_button = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_connect_button));
-        if (main_cancel!= null) {
-            main_cancel.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    MainActivity_.this.main_cancel();
-                }
-
-            }
-            );
-        }
+        MainActivity_ToggleButton_IfConnectAuto = ((ToggleButton) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_ToggleButton_IfConnectAuto));
+        MainActivity_TextView_ShowConnectState = ((TextView) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_TextView_ShowConnectState));
         if (main_connect!= null) {
             main_connect.setOnClickListener(new OnClickListener() {
 
@@ -122,6 +114,30 @@ public final class MainActivity_
                 }
                 );
             }
+        }
+        if (main_cancel!= null) {
+            main_cancel.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    MainActivity_.this.main_cancel();
+                }
+
+            }
+            );
+        }
+        if (MainActivity_ToggleButton_IfConnectAuto!= null) {
+            MainActivity_ToggleButton_IfConnectAuto.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    MainActivity_.this.MainActivity_ToggleButton_IfConnectAuto();
+                }
+
+            }
+            );
         }
         if (service_list!= null) {
             service_list.setOnItemClickListener(new OnItemClickListener() {

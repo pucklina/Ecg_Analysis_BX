@@ -257,7 +257,7 @@ public class BluetoothLeService extends Service {
         return true;
     }
 
-    public boolean connect(final String address) {
+    public boolean connect(final String address,boolean autoConnect) {
 
         if (mBluetoothAdapter == null || address == null) {
             Log.w(TAG,"BluetoothAdapter not initialized or unspecified address");
@@ -278,7 +278,9 @@ public class BluetoothLeService extends Service {
             Log.w(TAG, "Device not found.  Unable to connect.");
             return false;
         }
-        mBluetoothGatt = device.connectGatt(this, true, mGattCallback);
+
+        mBluetoothGatt = device.connectGatt(this, autoConnect, mGattCallback);
+
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
         System.out.println("device.getBondState==" + device.getBondState());
