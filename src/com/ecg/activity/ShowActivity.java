@@ -70,7 +70,7 @@ import android.widget.TextView;
 public class ShowActivity extends Activity {
 
 
-    private String tag = "ShowActivity"; //It uses for Log
+    private String Tag = "ShowActivity"; //It uses for Log
 
 
     /*--------------------- Part 1 FindVeiewByID Start----------------------------
@@ -168,17 +168,19 @@ public class ShowActivity extends Activity {
         else {
 
             //if Reciever not Register,Register it;
-            if(!flagForIfReceiverRegistered)
-                if(registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter())!=null)  flagForIfReceiverRegistered = true;
+            if(!flagForIfReceiverRegistered) {
+                registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+                flagForIfReceiverRegistered = true;
+            }
 
 
             //Begin Connect
             for (int i = 0; i < 3; i++) {
                 if (mBluetoothLeService != null) {
-                    Log.i("information onServiceConnected", ""
+                    Log.i(Tag,"information onServiceConnected"
                             + mBluetoothLeService.getClass().toString());
                     final boolean result = mBluetoothLeService.connect(mDeviceAddress,true);
-                    Log.i("information", "Connect request result=" + result);
+                    Log.i(Tag, "Connect request result=" + result);
                     if (result) {
                         flagForIfConnectSuccecceed = true;
                         break;
@@ -225,7 +227,7 @@ public class ShowActivity extends Activity {
             mBluetoothLeService = ((BluetoothLeService.LocalBinder) service)
                     .getService();
             if (!mBluetoothLeService.initialize()) {
-                Log.i("information", "Unable to initialize Bluetooth");
+                Log.i(Tag, "Unable to initialize Bluetooth");
                 finish();
             }
             mBluetoothLeService.connect(mDeviceAddress,true);
@@ -271,7 +273,7 @@ public class ShowActivity extends Activity {
         while (count != 10) { //try to connect for 10 times
             if (flagForIfWriteDevice1Finish && flagForIfWriteDevice2Finish) {
                 if ((flagForIfWriteDevice1Succeed && flagForIfWriteDevice2Succeed
-                        && flagForIfWriteDevice1Finish && flagForIfWriteDevice2Finish)) {
+                        && flagForIfWriteDevice1Finish && flagForIfWriteDevice2Finish)&& flagForECGDataCanGet ) {
                     setCircleButton(100);
                     break;
                 }
@@ -288,7 +290,7 @@ public class ShowActivity extends Activity {
                 e.printStackTrace();
             }
         }
-        if (flagForIfWriteDevice1Succeed && flagForIfWriteDevice2Succeed)
+        if (flagForIfWriteDevice1Succeed && flagForIfWriteDevice2Succeed && flagForECGDataCanGet)
             setCircleButton(100); //when connect1 and connect2 connect successful
         else setCircleButton(-1);
 
@@ -304,7 +306,7 @@ public class ShowActivity extends Activity {
     @Background(delay = 500)
     void WriteDevice1() {
 
-        Log.i(tag, "STATUE1 before:" + flagForIfWriteDevice1Succeed);
+        Log.i(Tag, "STATUE1 before:" + flagForIfWriteDevice1Succeed);
         //Tag connect1 is running
         if (!flagForIfWriteDevice1Succeed) {
             flagForIfWriteDevice1Finish = false;
@@ -321,8 +323,6 @@ public class ShowActivity extends Activity {
                     byte[] configValue = ENABLE_NOTIFICATION_VALUE;
                     boolean success = config.setValue(configValue);
                     if (success) {
-                        Log.w("information changeNotification success",
-                                "information changeNotification");
                         flagForIfWriteDevice1Succeed = true;
                     }
                     mBluetoothLeService.writeDescriptor(config);
@@ -339,14 +339,14 @@ public class ShowActivity extends Activity {
         }
         flagForIfWriteDevice1Finish = true;
 
-        Log.i(tag, "STATUE1:" + flagForIfWriteDevice1Succeed);
+        Log.i(Tag, "STATUE1:" + flagForIfWriteDevice1Succeed);
     }
 
 
     @Background(delay = 1000)
     void WriteDevice2() {
 
-        Log.i(tag, "STATUE2 before:" + flagForIfWriteDevice2Succeed);
+        Log.i(Tag, "STATUE2 before:" + flagForIfWriteDevice2Succeed);
 
         if (!flagForIfWriteDevice2Succeed) {
             flagForIfWriteDevice2Finish = false;
@@ -371,7 +371,7 @@ public class ShowActivity extends Activity {
             } else flagForIfWriteDevice2Succeed = false;
         }
         flagForIfWriteDevice2Finish = true;
-        Log.i(tag, "STATUE2:" + flagForIfWriteDevice2Succeed);
+        Log.i(Tag, "STATUE2:" + flagForIfWriteDevice2Succeed);
     }
     /*--------------------- Part 4 BluetoothConnect End----------------------------
     ---------------------------------------------------------------------------*/
@@ -379,11 +379,14 @@ public class ShowActivity extends Activity {
     /*--------------------- Part 5 BluetoothBroadcastReceiver Start----------------------------
         ---------------------------------------------------------------------------*/
 
+    boolean flagForECGDataCanGet = false;
+
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 final float ecg[] = intent.getFloatArrayExtra("ecg");
+                flagForECGDataCanGet = true;
                 ECGDataProcess(ecg);
             }
             if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
@@ -392,6 +395,7 @@ public class ShowActivity extends Activity {
         }
     };
 
+    AlertDialog mDialog;
     @UiThread
     void BluetoothDisconnetWarning() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -405,7 +409,7 @@ public class ShowActivity extends Activity {
 
             }
         });
-        dialog.show();
+        mDialog = dialog.show();
     }
 
 
@@ -474,10 +478,11 @@ public class ShowActivity extends Activity {
     }
 
     protected void onResume() {
-        Log.e(tag,"onResume");
+        Log.e(Tag,"onResume");
         super.onResume();
         //registerReceiver(from BLEService)
-        if(registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter())!=null)  flagForIfReceiverRegistered = true;
+        registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
+        flagForIfReceiverRegistered = true;
         //START Service 和 bindService
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         startService(gattServiceIntent);
@@ -486,23 +491,25 @@ public class ShowActivity extends Activity {
 
     protected void onStop() {
         super.onStop();
-        Log.e(tag,"onStop");
+        Log.e(Tag,"onStop");
         if (flagForIfReceiverRegistered) {
             unregisterReceiver(mGattUpdateReceiver);
             flagForIfReceiverRegistered = false;
         }
+        if(mDialog!=null)mDialog.dismiss();
+
         unbindService(mServiceConnection);
     }
 
 
     protected void onPause() {
         super.onPause();
-        Log.e(tag,"onPause");
+        Log.e(Tag,"onPause");
     }
 
     protected void onDestroy() {
         super.onDestroy();
-        Log.e(tag,"onDestroy");
+        Log.e(Tag,"onDestroy");
 
         mBluetoothLeService = null;
     }
@@ -998,11 +1005,7 @@ public class ShowActivity extends Activity {
             if (flagForFreqChartVisiable) updateAnalysisTV(null, 2);
             filterFD();
             yVals.clear();
-            //java.text.DecimalFormat ff = new java.text.DecimalFormat("#0.###");
-            //for (int i = 0; i < FFT_N; i++) {
-            //    //Log.w(tag, "" + i + "as:" + ff.format(fd[i]));
-            //
-            //}
+
             float tempMax = 0f;
             for(float i:fd) if(i>tempMax) tempMax=i;
 
@@ -1107,7 +1110,7 @@ public class ShowActivity extends Activity {
     }
 
     private void getRRArraytrans() {
-        Log.e(tag,"getRRArray"+RRArray.size());
+        Log.e(Tag,"getRRArray"+RRArray.size());
         double ff, bb, mm;
         ff = 0;
         bb = RRArray.get(2);
@@ -1125,7 +1128,7 @@ public class ShowActivity extends Activity {
             i++;
         }
 
-        Log.e(tag,"getRRArraytrans"+RRArrayTrans.size());
+        Log.e(Tag,"getRRArraytrans"+RRArrayTrans.size());
         while(RRArrayTrans.size()!=512){
             RRArrayTrans.add(0.0);
         }

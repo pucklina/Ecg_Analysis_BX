@@ -40,7 +40,7 @@ public final class MainActivity_
         init_(savedInstanceState);
         super.onCreate(savedInstanceState);
         OnViewChangedNotifier.replaceNotifier(previousNotifier);
-        setContentView(layout.activity_main);
+        setContentView(layout.acticity_main);
     }
 
     private void init_(Bundle savedInstanceState) {
@@ -79,22 +79,34 @@ public final class MainActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        linerlayout_main = ((RelativeLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main));
-        service_list = ((ListView) hasViews.findViewById(com.ecg_analysis.R.id.service_list));
-        linerlayout_main_connect = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_connect));
-        main_connect = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.main_connect));
-        main_cancel = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.main_cancel));
-        linerlayout_main_text = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_text));
-        linerlayout_main_connect_button = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.linerlayout_main_connect_button));
+        MainActivity_LinearLayout_BLEDeviceList = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_LinearLayout_BLEDeviceList));
+        MainActivity_Button_CancelScan = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_Button_CancelScan));
+        MainActivity_LinearLayout_Cancel = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_LinearLayout_Cancel));
         MainActivity_ToggleButton_IfConnectAuto = ((ToggleButton) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_ToggleButton_IfConnectAuto));
+        MainActivity_Button_ScanBLE = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_Button_ScanBLE));
         MainActivity_TextView_ShowConnectState = ((TextView) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_TextView_ShowConnectState));
-        if (main_connect!= null) {
-            main_connect.setOnClickListener(new OnClickListener() {
+        MainActivity_ListView_BLEDevice = ((ListView) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_ListView_BLEDevice));
+        MainActivity_LinearLayout_Text = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_LinearLayout_Text));
+        MainActivity_RelativeLayout_ButtonSeries = ((RelativeLayout) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_RelativeLayout_ButtonSeries));
+        if (MainActivity_Button_ScanBLE!= null) {
+            MainActivity_Button_ScanBLE.setOnClickListener(new OnClickListener() {
 
 
                 @Override
                 public void onClick(View view) {
-                    MainActivity_.this.main_connect();
+                    MainActivity_.this.MainActivity_Button_ScanBLE();
+                }
+
+            }
+            );
+        }
+        if (MainActivity_Button_CancelScan!= null) {
+            MainActivity_Button_CancelScan.setOnClickListener(new OnClickListener() {
+
+
+                @Override
+                public void onClick(View view) {
+                    MainActivity_.this.MainActivity_Button_CancelScan();
                 }
 
             }
@@ -115,18 +127,6 @@ public final class MainActivity_
                 );
             }
         }
-        if (main_cancel!= null) {
-            main_cancel.setOnClickListener(new OnClickListener() {
-
-
-                @Override
-                public void onClick(View view) {
-                    MainActivity_.this.main_cancel();
-                }
-
-            }
-            );
-        }
         if (MainActivity_ToggleButton_IfConnectAuto!= null) {
             MainActivity_ToggleButton_IfConnectAuto.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -139,13 +139,13 @@ public final class MainActivity_
             }
             );
         }
-        if (service_list!= null) {
-            service_list.setOnItemClickListener(new OnItemClickListener() {
+        if (MainActivity_ListView_BLEDevice!= null) {
+            MainActivity_ListView_BLEDevice.setOnItemClickListener(new OnItemClickListener() {
 
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    MainActivity_.this.service_list(position);
+                    MainActivity_.this.MainActivity_ListView_BLEDevice(position);
                 }
 
             }

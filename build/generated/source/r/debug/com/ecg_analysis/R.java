@@ -629,10 +629,21 @@ containing a value of this type.
     public static final class id {
         public static final int FreqChart=0x7f0a001c;
         public static final int HRChart=0x7f0a0018;
-        public static final int MainActivity_Button_ConnectAtNow=0x7f0a0028;
-        public static final int MainActivity_TextView_IfConnectAuto=0x7f0a0031;
-        public static final int MainActivity_TextView_ShowConnectState=0x7f0a0030;
-        public static final int MainActivity_ToggleButton_IfConnectAuto=0x7f0a0032;
+        public static final int MainActivity_Button_CancelScan=0x7f0a0029;
+        public static final int MainActivity_Button_ConnectAtNow=0x7f0a0022;
+        public static final int MainActivity_Button_MyInfo=0x7f0a0023;
+        public static final int MainActivity_Button_ScanBLE=0x7f0a0021;
+        public static final int MainActivity_Button_Setting=0x7f0a0024;
+        public static final int MainActivity_LinearLayout_BLEDeviceList=0x7f0a0026;
+        public static final int MainActivity_LinearLayout_Cancel=0x7f0a0028;
+        public static final int MainActivity_LinearLayout_Text=0x7f0a0025;
+        public static final int MainActivity_ListView_BLEDevice=0x7f0a0027;
+        public static final int MainActivity_RelativeLayout_ButtonSeries=0x7f0a0020;
+        public static final int MainActivity_TextView_IfConnectAuto=0x7f0a002b;
+        public static final int MainActivity_TextView_Log=0x7f0a001e;
+        public static final int MainActivity_TextView_ShowConnectState=0x7f0a002a;
+        public static final int MainActivity_TextView_Welcome=0x7f0a001f;
+        public static final int MainActivity_ToggleButton_IfConnectAuto=0x7f0a002c;
         public static final int ShowActivity_Button_ConnectStart=0x7f0a0011;
         public static final int ShowActivity_Button_ShowFreqChart=0x7f0a0015;
         public static final int ShowActivity_Button_ShowHRChart=0x7f0a0013;
@@ -646,13 +657,13 @@ containing a value of this type.
         public static final int ShowActivity_RelativeLayout_ViewOfButtonSet=0x7f0a0012;
         public static final int ShowActivity_TextView_AnalysisText=0x7f0a001d;
         public static final int TimeChart=0x7f0a001a;
-        public static final int action_settings=0x7f0a0035;
+        public static final int action_settings=0x7f0a0037;
         public static final int box=0x7f0a0005;
         public static final int bt_set_cancel=0x7f0a000d;
         public static final int bt_set_confirm=0x7f0a000e;
-        public static final int btn_login=0x7f0a0025;
-        public static final int device_address=0x7f0a0034;
-        public static final int device_name=0x7f0a0033;
+        public static final int btn_login=0x7f0a0034;
+        public static final int device_address=0x7f0a0036;
+        public static final int device_name=0x7f0a0035;
         public static final int fl_box=0x7f0a0008;
         public static final int fl_dark=0x7f0a0000;
         public static final int fl_darker=0x7f0a000b;
@@ -664,29 +675,20 @@ containing a value of this type.
         public static final int fl_ripple=0x7f0a0004;
         public static final int fl_transparent=0x7f0a000a;
         public static final int flat=0x7f0a0006;
-        public static final int layout1=0x7f0a0020;
-        public static final int linerlayout_main=0x7f0a0026;
-        public static final int linerlayout_main_connect=0x7f0a002c;
-        public static final int linerlayout_main_connect_button=0x7f0a002e;
-        public static final int linerlayout_main_text=0x7f0a002b;
-        public static final int log=0x7f0a001e;
-        public static final int login_password=0x7f0a0023;
-        public static final int login_username=0x7f0a0021;
-        public static final int main_cancel=0x7f0a002f;
-        public static final int main_connect=0x7f0a0027;
-        public static final int main_my=0x7f0a0029;
-        public static final int main_rela=0x7f0a002a;
-        public static final int nothing1=0x7f0a0022;
-        public static final int nothing2=0x7f0a0024;
-        public static final int nothing3=0x7f0a001f;
-        public static final int service_list=0x7f0a002d;
+        public static final int layout1=0x7f0a002f;
+        public static final int log=0x7f0a002d;
+        public static final int login_password=0x7f0a0032;
+        public static final int login_username=0x7f0a0030;
+        public static final int nothing1=0x7f0a0031;
+        public static final int nothing2=0x7f0a0033;
+        public static final int nothing3=0x7f0a002e;
         public static final int transparent=0x7f0a0007;
     }
     public static final class layout {
         public static final int acitvity_set=0x7f030000;
         public static final int acitvity_show=0x7f030001;
-        public static final int activity_login=0x7f030002;
-        public static final int activity_main=0x7f030003;
+        public static final int acticity_main=0x7f030002;
+        public static final int activity_login=0x7f030003;
         public static final int listitem_device=0x7f030004;
     }
     public static final class menu {
