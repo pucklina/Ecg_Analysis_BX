@@ -17,6 +17,8 @@
 package com.ecg.activity;
 
 import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -34,12 +36,14 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.ecg.MyApplication;
+import com.ecg_analysis.R;
 
 import java.util.List;
 import java.util.UUID;
 
+
 public class BluetoothLeService extends Service {
-    private final static String TAG = BluetoothLeService.class.getSimpleName();
+    private final static String TAG = "BluetoothService";
 
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
@@ -55,11 +59,17 @@ public class BluetoothLeService extends Service {
     public final static String EXTRA_DATA = "com.example.bluetooth.le.EXTRA_DATA";
     public static final String EXTRA_DATA_BLUETOOTH = "com.example.bluetooth.le.EXTRA_DATA_BLUETOOTH";
 
+
+    NotificationManager notificationManager;
+
+    Notification notification;
+
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
 
         public void onDescriptorRead(BluetoothGatt gatt,
                                      BluetoothGattDescriptor descriptor, int status) {
         }
+
 
         public void onConnectionStateChange(BluetoothGatt gatt, int status,
                                             int newState) {
@@ -70,9 +80,18 @@ public class BluetoothLeService extends Service {
                 Log.i(TAG, "Connected to GATT server.");
                 Log.i(TAG, "Attempting to start service discovery:"
                         + mBluetoothGatt.discoverServices());
+
+                notification.setLatestEventInfo(BluetoothLeService.this,"ECG_ANALYSIS蓝牙服务",getResources().getString(R.string.MainActivity_String_DeviceAddressWhichOnConnect)+
+                        " "+((MyApplication)getApplication()).getBLEConnectNowDeviceAddress(),null);
+                notificationManager.notify(1,notification);
+
+
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
                 Log.i(TAG, "Disconnected from GATT server.");
+
+                notification.setLatestEventInfo(BluetoothLeService.this,"ECG_ANALYSIS蓝牙服务",getResources().getString(R.string.main_bt_unconnect),null);
+                notificationManager.notify(1, notification);
                 broadcastUpdate(intentAction);
             }
         }
@@ -125,10 +144,6 @@ public class BluetoothLeService extends Service {
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
         final byte[] data = characteristic.getValue();
-      //  System.out.print("Data:");
-      //  for(int i=0; i<20; i++)  System.out.print("No:"+i+"----"+Integer.toHexString(data[i])+" ");
-       //  System.out.println("");
-
 
         int j;
 
@@ -179,55 +194,28 @@ public class BluetoothLeService extends Service {
         sendBroadcast(intent);
     }
 
-    // 基线滤波器
-    static float ecg1h0 = 0f, ecg1h1 = 0f, ecg1h2 = 0f, ecg1h3 = 0f, ecg1h4 = 0f,
-            ecg1h5 = 0f;
-
-    public float filter_base_ecg1(float x) {
-        ecg1h5 = ecg1h4;
-        ecg1h4 = ecg1h3;
-        ecg1h3 = ecg1h2;
-        ecg1h2 = ecg1h1;
-        ecg1h1 = ecg1h0;
-        ecg1h0 = (float) (x + 0.950957 * ecg1h5);
-        return (float) (0.975478 * ecg1h0 - 0.975478 * ecg1h5);
-    }
-
-    // 五点滑动平均
-    static int ecg1n = 5;
-    static float ecg1value_buf[] = new float[ecg1n];
-    static int ecg1ii = 0;
-
-    // 五点滑动平均
-    static float filter_5_ecg1(float f) {
-
-        int count;
-        float sum = 0;
-        ecg1value_buf[ecg1ii++] = f;
-        if (ecg1ii == ecg1n)
-            ecg1ii = 0;
-        for (count = 0; count < ecg1n; count++)
-            sum += ecg1value_buf[count];
-        return (float) (sum / ecg1n);
-    }
 
 
 
-    public class LocalBinder extends Binder {
-        BluetoothLeService getService() {
-            return BluetoothLeService.this;
-        }
-    }
 
+
+
+//----------------------------Service LifeCycle Start----------------------------//
+//-------------------------------------------------------------------------//
 
     public void onCreate() {
         super.onCreate();
-        MyApplication.BlEServiceStart=true;
+
+        notificationManager =  (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notification = new Notification(R.drawable.main_log,"BLE蓝牙服务已经开启",System.currentTimeMillis());
+        notification.setLatestEventInfo(this,"ECG_ANALYSIS蓝牙服务","未连接蓝牙设备",null);
+        notificationManager.notify(1,notification);
+        ((MyApplication)getApplication()).setBlEServiceStart(true);
     }
 
     public void onDestroy() {
         super.onDestroy();
-        MyApplication.BlEServiceStart=false;
+        ((MyApplication)getApplication()).setBlEServiceStart(false);
     }
 
     public IBinder onBind(Intent intent) {
@@ -240,6 +228,13 @@ public class BluetoothLeService extends Service {
     }
 
     private final IBinder mBinder = new LocalBinder();
+
+    public class LocalBinder extends Binder {
+        BluetoothLeService getService() {
+            return BluetoothLeService.this;
+        }
+    }
+
 
     public boolean initialize() {
         if (mBluetoothManager == null) {
@@ -257,14 +252,14 @@ public class BluetoothLeService extends Service {
         return true;
     }
 
-    public boolean connect(final String address,boolean autoConnect) {
+    public boolean connect(final String address,boolean autoConnect,boolean connectTryToUseOldGattForever) {
 
         if (mBluetoothAdapter == null || address == null) {
             Log.w(TAG,"BluetoothAdapter not initialized or unspecified address");
             return false;
         }
 
-        if (mBluetoothDeviceAddress != null	&& address.equals(mBluetoothDeviceAddress)&& mBluetoothGatt != null) {
+        if ( mBluetoothDeviceAddress != null	&& address.equals(mBluetoothDeviceAddress)&& mBluetoothGatt != null) {
             Log.d(TAG,"Trying to use an existing mBluetoothGatt for connection");
             if (mBluetoothGatt.connect()) {
                 return true;
@@ -280,6 +275,9 @@ public class BluetoothLeService extends Service {
         }
 
         mBluetoothGatt = device.connectGatt(this, autoConnect, mGattCallback);
+
+        if(((MyApplication)getApplication()).getBLEConnectNowDeviceAddress().equals(address)==false)
+            ((MyApplication)getApplication()).setBLEConnectNowDeviceAddress(address);
 
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
@@ -302,6 +300,12 @@ public class BluetoothLeService extends Service {
         mBluetoothGatt.close();
         mBluetoothGatt = null;
     }
+
+
+//----------------------------Service LifeCycle End----------------------------//
+//-------------------------------------------------------------------------//
+
+
 
     public void readCharacteristic(BluetoothGattCharacteristic characteristic) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
@@ -343,4 +347,43 @@ public class BluetoothLeService extends Service {
             BluetoothGattCharacteristic configCharacteristic) {
         return mBluetoothGatt.writeCharacteristic(configCharacteristic);
     }
+
+
+
+//----------------------------Math Function Start----------------------------//
+//-------------------------------------------------------------------------//
+
+    // 基线滤波器
+    static float ecg1h0 = 0f, ecg1h1 = 0f, ecg1h2 = 0f, ecg1h3 = 0f, ecg1h4 = 0f,
+            ecg1h5 = 0f;
+
+    public float filter_base_ecg1(float x) {
+        ecg1h5 = ecg1h4;
+        ecg1h4 = ecg1h3;
+        ecg1h3 = ecg1h2;
+        ecg1h2 = ecg1h1;
+        ecg1h1 = ecg1h0;
+        ecg1h0 = (float) (x + 0.950957 * ecg1h5);
+        return (float) (0.975478 * ecg1h0 - 0.975478 * ecg1h5);
+    }
+
+    // 五点滑动平均
+    static int ecg1n = 5;
+    static float ecg1value_buf[] = new float[ecg1n];
+    static int ecg1ii = 0;
+
+    // 五点滑动平均
+    static float filter_5_ecg1(float f) {
+
+        int count;
+        float sum = 0;
+        ecg1value_buf[ecg1ii++] = f;
+        if (ecg1ii == ecg1n)
+            ecg1ii = 0;
+        for (count = 0; count < ecg1n; count++)
+            sum += ecg1value_buf[count];
+        return (float) (sum / ecg1n);
+    }
+//----------------------------Math Function End----------------------------//
+//-------------------------------------------------------------------------//
 }

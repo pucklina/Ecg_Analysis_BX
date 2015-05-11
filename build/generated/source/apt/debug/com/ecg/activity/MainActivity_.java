@@ -79,15 +79,15 @@ public final class MainActivity_
 
     @Override
     public void onViewChanged(HasViews hasViews) {
-        MainActivity_LinearLayout_BLEDeviceList = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_LinearLayout_BLEDeviceList));
-        MainActivity_Button_CancelScan = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_Button_CancelScan));
         MainActivity_LinearLayout_Cancel = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_LinearLayout_Cancel));
-        MainActivity_ToggleButton_IfConnectAuto = ((ToggleButton) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_ToggleButton_IfConnectAuto));
-        MainActivity_Button_ScanBLE = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_Button_ScanBLE));
-        MainActivity_TextView_ShowConnectState = ((TextView) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_TextView_ShowConnectState));
-        MainActivity_ListView_BLEDevice = ((ListView) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_ListView_BLEDevice));
-        MainActivity_LinearLayout_Text = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_LinearLayout_Text));
         MainActivity_RelativeLayout_ButtonSeries = ((RelativeLayout) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_RelativeLayout_ButtonSeries));
+        MainActivity_Button_CancelScan = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_Button_CancelScan));
+        MainActivity_ToggleButton_IfConnectAuto = ((ToggleButton) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_ToggleButton_IfConnectAuto));
+        MainActivity_TextView_ShowConnectState = ((TextView) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_TextView_ShowConnectState));
+        MainActivity_LinearLayout_Text = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_LinearLayout_Text));
+        MainActivity_Button_ScanBLE = ((FButton) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_Button_ScanBLE));
+        MainActivity_LinearLayout_BLEDeviceList = ((LinearLayout) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_LinearLayout_BLEDeviceList));
+        MainActivity_ListView_BLEDevice = ((ListView) hasViews.findViewById(com.ecg_analysis.R.id.MainActivity_ListView_BLEDevice));
         if (MainActivity_Button_ScanBLE!= null) {
             MainActivity_Button_ScanBLE.setOnClickListener(new OnClickListener() {
 
@@ -155,14 +155,14 @@ public final class MainActivity_
     }
 
     @Override
-    public void ConnectDevice() {
-        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
+    public void scanLeDevice(final boolean enable) {
+        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 1000, "") {
 
 
             @Override
             public void execute() {
                 try {
-                    MainActivity_.super.ConnectDevice();
+                    MainActivity_.super.scanLeDevice(enable);
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }
@@ -173,14 +173,14 @@ public final class MainActivity_
     }
 
     @Override
-    public void scanLeDevice(final boolean enable) {
-        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 1000, "") {
+    public void ConnectDevice() {
+        BackgroundExecutor.execute(new BackgroundExecutor.Task("", 0, "") {
 
 
             @Override
             public void execute() {
                 try {
-                    MainActivity_.super.scanLeDevice(enable);
+                    MainActivity_.super.ConnectDevice();
                 } catch (Throwable e) {
                     Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), e);
                 }

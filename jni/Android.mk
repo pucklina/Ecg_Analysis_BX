@@ -32,4 +32,13 @@ LOCAL_SRC_FILES := readEcg/wfdbinit.c readEcg/wfdbio.c readEcg/annot.c readEcg/s
 LOCAL_LDLIBS += -L$(SYSROOT)/usr/lib -llog
 LOCAL_CFLAGS := -DUSE_FILE32API -DGL_GLEXT_PROTOTYPES=1
 
-include $(BUILD_SHARED_LIBRARY)  
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := fft
+LOCAL_SRC_FILES := FFT/fft.c
+LOCAL_LDLIBS += -L$(SYSROOT)/usr/lib -llog
+LOCAL_CFLAGS := -DUSE_FILE32API -DGL_GLEXT_PROTOTYPES=1
+
+include $(BUILD_SHARED_LIBRARY)

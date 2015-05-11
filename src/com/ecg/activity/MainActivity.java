@@ -5,6 +5,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import com.ecg.MyApplication;
 import com.ecg_analysis.R;
+
+import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.IntentFilter;
@@ -39,6 +44,7 @@ import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ItemClick;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.ViewById;
 
 import info.hoang8f.widget.FButton;
@@ -53,8 +59,8 @@ public class MainActivity extends Activity {
     @ViewById
     ListView MainActivity_ListView_BLEDevice;
 
-    @ViewById
-    TextView MainActivity_TextView_ShowConnectState;
+   // @ViewById
+   // TextView MainActivity_TextView_ShowConnectState;
 
     @ViewById
     FButton MainActivity_Button_ScanBLE;
@@ -84,6 +90,7 @@ public class MainActivity extends Activity {
      ---------------------------------------------------------------------------*/
      @Click //ScanBLE
      void MainActivity_Button_ScanBLE(){
+
          MainActivity_RelativeLayout_ButtonSeries.setVisibility(View.GONE);
          MainActivity_LinearLayout_BLEDeviceList.setVisibility(View.VISIBLE);
          MainActivity_LinearLayout_Text.setVisibility(View.VISIBLE);
@@ -97,7 +104,7 @@ public class MainActivity extends Activity {
     void MainActivity_Button_ConnectAtNow(){
         if(flagForBLEConnecting){
             final Intent intent = new Intent(this, ShowActivity_.class);
-            intent.putExtra(ShowActivity_.EXTRAS_DEVICE_ADDRESS, MyApplication.BLEDeviceName);
+            intent.putExtra(ShowActivity_.EXTRAS_DEVICE_ADDRESS, ((MyApplication)getApplication()).getBLEConnectNowDeviceAddress());
             intent.putExtra(ShowActivity_.EXTRAS_ENTER_METHOD,"EXTRAS_ENTER_METHOD_2");
             startActivity(intent);
         }
@@ -252,7 +259,9 @@ public class MainActivity extends Activity {
         ---------------------------------------------------------------------------*/
     /*--------------------- Part 4 AndriodActivity LifeCycle Start----------------------------
      ---------------------------------------------------------------------------*/
-     @Override
+    Intent gattServiceIntent;
+    Timer timer;
+    @Override
      protected void onCreate(Bundle savedInstanceState) {
 
          super.onCreate(savedInstanceState);
@@ -261,20 +270,12 @@ public class MainActivity extends Activity {
          getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//Forbid SCREEN off
 
 
-        //ConnectDevice per 2000ms
-         Timer timer = new Timer();
-         TimerTask task = new TimerTask() {
-             @Override
-             public void run() {
-                 ConnectDevice();
-             }
-         };
-         timer.schedule(task,0, 2*1000);
+
 
          //get DeviceAddress if it store in Andriod
          SharedPreferences sharedPreferences = getSharedPreferences("DeviceAddress",MODE_PRIVATE);
          if(sharedPreferences!=null){
-             MyApplication.BLEDeviceName = sharedPreferences.getString("DeviceAddress","");
+             ((MyApplication)getApplication()).setBLEAutoConnectDeviceAddress(sharedPreferences.getString("DeviceAddress","")); ;
 
          }
 
@@ -295,6 +296,12 @@ public class MainActivity extends Activity {
              Toast.makeText(this, "设备不支持低功耗蓝牙",Toast.LENGTH_SHORT).show();
              finish();
          }
+
+        //if Bluetooth is not open，open it
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        }
      }
 
 
@@ -306,17 +313,33 @@ public class MainActivity extends Activity {
     @Background
     void ConnectDevice(){
         if(!flagForBLEConnecting&&mBluetoothLeService!=null&&flagForIfConnectAuto) {
-            mBluetoothLeService.connect(MyApplication.BLEDeviceName,true);
+
+            mBluetoothLeService.connect(((MyApplication) getApplication()).getBLEAutoConnectDeviceAddress(), true, false);
+
+
         }
     }
+
+
 
     protected void onResume() {
         super.onResume();
 
         Log.e(Tag, "onResume");
 
+        //ConnectDevice per 2000ms
+        timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                ConnectDevice();
+            }
+        };
+        timer.schedule(task,0, 2*1000);
+
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
 
+        //ViewChange
         MainActivity_LinearLayout_BLEDeviceList.setVisibility(View.GONE);
         MainActivity_RelativeLayout_ButtonSeries.setVisibility(View.VISIBLE);
         MainActivity_LinearLayout_Text.setVisibility(View.GONE);
@@ -324,19 +347,12 @@ public class MainActivity extends Activity {
         MainActivity_Button_CancelScan.setEnabled(false);
         MainActivity_Button_ScanBLE.setEnabled(true);
 
-        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+        gattServiceIntent = new Intent(this, BluetoothLeService.class);
         startService(gattServiceIntent);
         flagForBindService=bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
-        //if Bluetooth is not open，open it
-        if (!mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-
-        }
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         MainActivity_ListView_BLEDevice.setAdapter(mLeDeviceListAdapter);
-
 
     }
 
@@ -358,20 +374,19 @@ public class MainActivity extends Activity {
         super.onDestroy();
         Log.e(Tag,"onDestory");
 
-        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
-        stopService(gattServiceIntent);
-    }
-
-    public void onStop() {
-        super.onStop();
-        Log.e(Tag,"onStop");
-        unregisterReceiver(mGattUpdateReceiver);
         if(flagForBindService)  {
 
             unbindService(mServiceConnection);
             flagForBindService = false;
         }
+        stopService(gattServiceIntent);
+    }
 
+    public void onStop() {
+        super.onStop();
+        Log.e(Tag, "onStop");
+        timer.cancel();
+        unregisterReceiver(mGattUpdateReceiver);
     }
 
     public void onStart() {
@@ -399,7 +414,7 @@ public class MainActivity extends Activity {
                 finish();
             }
             mBluetoothLeService.disconnect();
-            mBluetoothLeService.connect(MyApplication.BLEDeviceName,true);
+            mBluetoothLeService.connect(((MyApplication)getApplication()).getBLEAutoConnectDeviceAddress(),true,true);
         }
 
         public void onServiceDisconnected(ComponentName componentName) {
@@ -412,11 +427,18 @@ public class MainActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-                MainActivity_TextView_ShowConnectState.setText(getResources().getString(R.string.MainActivity_String_DeviceAddressWhichOnConnect)+" "+MyApplication.BLEDeviceName);
+
+                //MainActivity_TextView_ShowConnectState.setText(getResources().getString(R.string.MainActivity_String_DeviceAddressWhichOnConnect)+" "
+                //        +((MyApplication)getApplication()).getBLEConnectNowDeviceAddress());
+
+
+
                 flagForBLEConnecting = true;
             }
             if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-                MainActivity_TextView_ShowConnectState.setText(R.string.main_bt_unconnect);
+
+
+                //MainActivity_TextView_ShowConnectState.setText(getResources().getString(R.string.main_bt_unconnect));
                 flagForBLEConnecting = false;
             }
         }
@@ -440,16 +462,21 @@ public class MainActivity extends Activity {
     void MainActivity_ToggleButton_IfConnectAuto(){
         if(MainActivity_ToggleButton_IfConnectAuto.isChecked()){
             Toast.makeText(MainActivity.this, "已经关闭自动连接", Toast.LENGTH_SHORT).show();
-           // unregisterReceiver(mGattUpdateReceiver);
+            //unregisterReceiver(mGattUpdateReceiver);
 
-            mBluetoothLeService.disconnect();
-            mBluetoothLeService.connect(MyApplication.BLEDeviceName, false);
-            mBluetoothLeService.disconnect();
-            flagForIfConnectAuto = false;
+                flagForIfConnectAuto = false;
+                mBluetoothLeService.disconnect();
+                mBluetoothLeService.connect(((MyApplication) getApplication()).getBLEAutoConnectDeviceAddress(), false, true);
+                mBluetoothLeService.disconnect();
+
+
+
         }else{
             Toast.makeText(MainActivity.this, "已经开启自动连接", Toast.LENGTH_SHORT).show();
-          //  registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
-            mBluetoothLeService.connect(MyApplication.BLEDeviceName,true);
+
+
+            flagForBindService = false;
+            mBluetoothLeService.connect(((MyApplication)getApplication()).getBLEAutoConnectDeviceAddress(),true,true);
             flagForIfConnectAuto = true;
         }
 

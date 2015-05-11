@@ -21,6 +21,7 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.NoTitle;
+import org.androidannotations.annotations.SystemService;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
@@ -42,6 +43,8 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
@@ -179,7 +182,7 @@ public class ShowActivity extends Activity {
                 if (mBluetoothLeService != null) {
                     Log.i(Tag,"information onServiceConnected"
                             + mBluetoothLeService.getClass().toString());
-                    final boolean result = mBluetoothLeService.connect(mDeviceAddress,true);
+                    final boolean result = mBluetoothLeService.connect(mDeviceAddress,true,true);
                     Log.i(Tag, "Connect request result=" + result);
                     if (result) {
                         flagForIfConnectSuccecceed = true;
@@ -230,7 +233,7 @@ public class ShowActivity extends Activity {
                 Log.i(Tag, "Unable to initialize Bluetooth");
                 finish();
             }
-            mBluetoothLeService.connect(mDeviceAddress,true);
+            mBluetoothLeService.connect(mDeviceAddress,true,true);
         }
 
         public void onServiceDisconnected(ComponentName componentName) {
@@ -390,12 +393,22 @@ public class ShowActivity extends Activity {
                 ECGDataProcess(ecg);
             }
             if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+
+
+
                 BluetoothDisconnetWarning();
             }
+
+            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+
+
+
+            }
+
         }
     };
 
-    AlertDialog mDialog;
+
     @UiThread
     void BluetoothDisconnetWarning() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -409,7 +422,7 @@ public class ShowActivity extends Activity {
 
             }
         });
-        mDialog = dialog.show();
+        if(flagForShowActivityIsRun) dialog.create().show();
     }
 
 
@@ -445,8 +458,7 @@ public class ShowActivity extends Activity {
 
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
 
-        MyApplication.BLEDeviceName = mDeviceAddress;
-
+        ((MyApplication)getApplication()).setBLEAutoConnectDeviceAddress(mDeviceAddress);
         //store the DeviceAddress
         SharedPreferences.Editor editor = getSharedPreferences("DeviceAddress",MODE_PRIVATE).edit();
         editor.putString("DeviceAddress",mDeviceAddress);
@@ -477,9 +489,13 @@ public class ShowActivity extends Activity {
         timeAnnoAdapter = new TimeAnnoAdapter();//to help count RR data and draw RR-bar-chart
     }
 
+
+    boolean flagForShowActivityIsRun =false;
     protected void onResume() {
         Log.e(Tag,"onResume");
         super.onResume();
+        flagForShowActivityIsRun = true;
+
         //registerReceiver(from BLEService)
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         flagForIfReceiverRegistered = true;
@@ -487,16 +503,20 @@ public class ShowActivity extends Activity {
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         startService(gattServiceIntent);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
+
     }
 
     protected void onStop() {
         super.onStop();
+
+        flagForShowActivityIsRun = false;
+
         Log.e(Tag,"onStop");
         if (flagForIfReceiverRegistered) {
             unregisterReceiver(mGattUpdateReceiver);
             flagForIfReceiverRegistered = false;
         }
-        if(mDialog!=null)mDialog.dismiss();
 
         unbindService(mServiceConnection);
     }
